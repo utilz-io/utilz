@@ -8,3 +8,7 @@ edition = "2018"
 
 [dependencies]
 rocket = "0.4.2"
+
+[dependencies.maud]
+version = "*"
+features = ["rocket"]
