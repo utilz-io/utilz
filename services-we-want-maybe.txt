@@ -1,0 +1,17 @@
+base64 enc/dec
+binary enc/dec
+hashing; md5, sha1, sha256, sha512, bcrypt,
+geo coordinate longitude latitude converter (degrees/minutes/seconds N/S/W/E to decimal +/-)
+zip code locator (eg in: 98005 US, out: Bellevue, Washington, USA)
+whois lookup
+reverse ip lookup
+calculator (visual buttons)
+calculator from text (in: "5 + 3 * (7/5)", out: "11.2")
+equation simplifier (in: "7x / 5 = 3x + 1", out: "x = -5/8")
+unit conversion/calculation (in: "5in to cm", out: "12.7cm"; in: "5 GiB at 30mbps", out: "approx 23min 51sec")
+timezone calc
+simple countdown/up timer (curlable with id?)
+dns checker (check through multiple resolvers?)
+spf checker?
+IDN language finder
+
