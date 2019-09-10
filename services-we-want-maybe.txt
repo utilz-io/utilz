@@ -15,3 +15,4 @@ dns checker (check through multiple resolvers?)
 spf checker?
 IDN language finder
 
+html/css/js/etc beautifier/minifier (probably use some existing open-source solution)

@@ -1,9 +1,12 @@
 #![feature(proc_macro_hygiene, decl_macro, type_ascription)]
 
 #[macro_use] extern crate rocket;
+extern crate rocket_cors;
 extern crate maud;
 extern crate base64;
 
+use rocket::response::content::Plain;
+use rocket::response::Responder;
 use maud::{html, DOCTYPE, Markup};
 
 #[get("/math")]
@@ -25,30 +28,46 @@ fn math() -> Markup {
 }
 
 #[post("/base64/enc", data="<input>")]
-fn base64_enc(input: Vec<u8>) -> String {
+fn base64_enc(input: Vec<u8>) -> impl Responder<'static> {
     base64::encode(&input)
 }
 
-/*fn base64_dec(input: String) -> Result<Vec<u8>, {
-    base64::encode(&input)
-}*/
-
 #[post("/base64/dec", data="<input>")]
-fn base64_dec(input: String) -> Result<Vec<u8>,&'static str> {
+fn base64_dec(input: String) -> impl Responder<'static> {
     base64_dec_str(input)
 }
 
 #[get("/base64/dec/<input>")]
-fn base64_dec_str(input: String) -> Result<Vec<u8>,&'static str> {
+fn base64_dec_str(input: String) -> impl Responder<'static> {
     base64::decode(&input).map_err(|_| "Could not decode string")
 }
 
 #[get("/base64/enc/<input>")]
-fn base64_enc_str(input: String) -> String {
+fn base64_enc_str(input: String) -> impl Responder<'static> {
     base64::encode(&input)
 }
 
+#[get("/whois/<domain>")]
+fn whois(domain: String) -> impl Responder<'static> {
+    use std::process::Command;
+    let mut out = Command::new("whois")
+        .arg(&domain)
+        .output()
+        .expect("failed to execute process");
+    let mut res:Vec<u8> = Vec::new();
+    res.append(&mut out.stdout);
+    res.append(&mut out.stderr);
+    Plain(res)
+}
+
+// #[get("/delay/<ms>")]
+// fn delay(ms: u64) -> String
+
 fn main() {
+    let cors = rocket_cors::CorsOptions{
+        allow_credentials: true,
+        .. Default::default()
+    }.to_cors().unwrap();
     rocket::ignite().mount(
         "/",
         routes![
@@ -56,7 +75,9 @@ fn main() {
             base64_dec_str,
             base64_enc_str,
             base64_enc,
-            base64_dec
+            base64_dec,
+            whois
         ]
-    ).launch();
+    ).attach(cors)
+    .launch();
 }

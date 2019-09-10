@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 rocket = "0.4.2"
+rocket_cors = "0.5"
 base64 = "*"
 
 [dependencies.maud]
